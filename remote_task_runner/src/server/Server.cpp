@@ -11,7 +11,10 @@
 
 Server::Server() {
     // Create new socket
-    Socket();
+    if (!Socket()) {
+        return;
+    }
+
     // Initialize needed value
     SetupSocketData();
     // Bind to local port
@@ -21,11 +24,13 @@ Server::Server() {
     if (result) {
         // Start listening
         result = Listen();
-        if (result) {
-//            std::cout << "Server: Started listening.." << std::endl;
-        } else {
+        if (!result) {
             std::cout << "Something broke on listening" << std::endl;
+        } else {
+//            std::cout << "Server: Started listening.." << std::endl;
         }
+    } else {
+        std::cout << "Something broke on binding" << std::endl;
     }
 }
 
@@ -33,15 +38,16 @@ Server::Server() {
 int Server::fileNameId = 0;
 
 
-void Server::Socket() {
+bool Server::Socket() {
     // Create a socket, IPv4, Stream sockets, TCP
     socketFd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     // Check if it is valid
     if (socketFd < 0) {
-        perror("cannot create socket");
-        exit(EXIT_FAILURE);
+        perror("Cannot create socket");
+        return false;
     }
+    return true;
 }
 
 void Server::SetupSocketData() {
@@ -57,9 +63,9 @@ void Server::SetupSocketData() {
 
 bool Server::Bind() {
     if (bind(socketFd, (struct sockaddr *) &sa, sizeof sa) < 0) {
-        perror("bind failed");
+        perror("Bind failed");
         CloseServerSocket();
-        exit(EXIT_FAILURE);
+        return false;
     } else {
         return true;
     }

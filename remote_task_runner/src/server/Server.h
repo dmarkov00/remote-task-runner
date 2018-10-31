@@ -47,7 +47,7 @@ private:
 
 private:
 
-    void Socket();
+    bool Socket();
 
     void SetupSocketData();
 

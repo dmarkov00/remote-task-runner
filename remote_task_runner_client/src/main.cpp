@@ -4,14 +4,15 @@
 
 
 static void PrintClientInfo() {
-    std::cout << "Welcome to the file dropper client! Choose from the menu.\n";
+    std::cout << "Welcome to the remote task runner client! Choose from the menu.\n";
     std::cout << "\n";
     std::cout << ("(1) Send a test message\n");
-    std::cout << ("(2) Ask the server for a permission to send a file\n");
-    std::cout << ("(3) Send a file to server\n");
-    std::cout << ("(4) Request a file from the server\n");
-    std::cout << ("(5) Delete a file on the server\n");
-    std::cout << ("(6) Exit program\n");
+    std::cout << ("(2) Authenticate with a passphrase\n");
+    std::cout << ("(3) Turn on the lights\n");
+    std::cout << ("(4) Turn off the lights\n");
+    std::cout << ("(5) Show an image to the TV\n");
+    std::cout << ("(6) Remove the image from the TV\n");
+    std::cout << ("(7) Exit the client program\n");
     std::cout << "\n";
     std::cout << ("Waiting for a choice..");
     std::cout << "\n";

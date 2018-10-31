@@ -12,7 +12,7 @@ CLIENT_SRC_DIR=$(SRC_DIR)client/
 
 OBJ_FILES= $(addprefix $(OBJ_DIR),main.o Client.o)
 
-.PHONY: all create_directories clean test
+.PHONY: all create_directories clean
 
 all: create_directories $(BIN_DIR)$(PRODUCT)
 
