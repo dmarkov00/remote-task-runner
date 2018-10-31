@@ -8,7 +8,7 @@ CXX=g++
 OBJ_DIR=obj/
 BIN_DIR=bin/
 SRC_DIR=src/
-SERVER_SRC_DIR=$(SRC_DIR)server
+SERVER_SRC_DIR=$(SRC_DIR)server/
 
 OBJ_FILES= $(addprefix $(OBJ_DIR),main.o Server.o)
 
