@@ -8,6 +8,7 @@ CXX=g++
 OBJ_DIR=obj/
 BIN_DIR=bin/
 SRC_DIR=src/
+SERVER_SRC_DIR=$(SRC_DIR)server
 
 OBJ_FILES= $(addprefix $(OBJ_DIR),main.o Server.o)
 
@@ -41,10 +42,10 @@ clean:
 $(BIN_DIR)$(PRODUCT): $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) $(OBJ_FILES) -o $@
 
-$(OBJ_DIR)Server.o: $(SRC_DIR)Server.cpp $(SRC_DIR)Server.h
+$(OBJ_DIR)Server.o: $(SERVER_SRC_DIR)Server.cpp $(SERVER_SRC_DIR)Server.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)main.o: $(SRC_DIR)main.cpp $(SRC_DIR)Server.cpp $(SRC_DIR)Server.h
+$(OBJ_DIR)main.o: $(SERVER_SRC_DIR)main.cpp $(SERVER_SRC_DIR)Server.cpp $(SERVER_SRC_DIR)Server.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #$(TEST): $(TEST_SOURCES) $(TEST_HEADERS) Makefile

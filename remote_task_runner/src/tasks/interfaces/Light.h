@@ -1,0 +1,8 @@
+//
+// Created by mi on 10/31/18.
+//
+
+#ifndef REMOTE_TASK_RUNNER_LIGHT_H
+#define REMOTE_TASK_RUNNER_LIGHT_H
+
+#endif //REMOTE_TASK_RUNNER_LIGHT_H
