@@ -45,7 +45,7 @@ $(BIN_DIR)$(PRODUCT): $(OBJ_FILES)
 $(OBJ_DIR)Server.o: $(SERVER_SRC_DIR)Server.cpp $(SERVER_SRC_DIR)Server.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJ_DIR)main.o: $(SERVER_SRC_DIR)main.cpp $(SERVER_SRC_DIR)Server.cpp $(SERVER_SRC_DIR)Server.h
+$(OBJ_DIR)main.o: $(SRC_DIR)main.cpp $(SERVER_SRC_DIR)Server.cpp $(SERVER_SRC_DIR)Server.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 #$(TEST): $(TEST_SOURCES) $(TEST_HEADERS) Makefile

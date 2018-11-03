@@ -24,25 +24,25 @@ int main() {
         // When #file# keyword is received, a second piece of data is expected containing the file content
         if (data == "#file#") {
 
-            if (server.IsClientAllowedToSendFiles()) {
-
-                // Calling receive for the second time to receive the file
-                server.Receive(connectFd, data);
-
-                // Write the content of the file to the file system
-                std::string fileName = server.WriteFile(data);
-
-                std::cout << "Wrote file with name: " << fileName << std::endl;
-
-                // Send a confirmation to the client and a the file name
-                server.Send(connectFd,
-                            "Your file was saved on the server. To request or delete your file use this id: " +
-                            fileName);
-            } else {
-                server.Send(connectFd, "Sorry, you are not allowed to send files");
-
-                std::cout << "Client tried to send a file but he was not allowed" << std::endl;
-            }
+//            if (server.IsClientAllowedToSendFiles()) {
+//
+//                // Calling receive for the second time to receive the file
+//                server.Receive(connectFd, data);
+//
+//                // Write the content of the file to the file system
+//                std::string fileName = server.WriteFile(data);
+//
+//                std::cout << "Wrote file with name: " << fileName << std::endl;
+//
+//                // Send a confirmation to the client and a the file name
+//                server.Send(connectFd,
+//                            "Your file was saved on the server. To request or delete your file use this id: " +
+//                            fileName);
+//            } else {
+//                server.Send(connectFd, "Sorry, you are not allowed to send files");
+//
+//                std::cout << "Client tried to send a file but he was not allowed" << std::endl;
+//            }
 
         } else if (data == "#filerequest#") {
             server.Receive(connectFd, data); // Calling receive for the second time to get the id of the file
@@ -56,21 +56,12 @@ int main() {
                 std::cout << "File with name:" << data << " was requested and sent to the client" << std::endl;
             }
 
-        } else if (data == "#filedelete#") {
-            server.Receive(connectFd, data); // Calling receive for the second time to get the id of the file
+        } else if (data == "#filesent#") {
 
-            // Delete file by file name
-            bool fileDeleted = server.DeleteFile(data);
 
-            if (fileDeleted) {
-                std::cout << "Deleted file with id: " << data<< std::endl;
+                server.ReceiveFile(connectFd, data);
 
-                server.Send(connectFd, "File deleted successfully");
-            } else {
-                std::cout << "Client tried to delete file: " << data<<", but it was not found" << std::endl;
 
-                server.Send(connectFd, "No file with this id");
-            }
 
 
         } else if (data == "#canIsendafile#") {   // If data is equal to "Can I send a file?"

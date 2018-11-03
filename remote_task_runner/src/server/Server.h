@@ -18,9 +18,11 @@ public:
 
     bool Send(int connectFd, std::string message);
 
-    void Receive(int connectFd, std::string &message);
+    std::string Receive(int connectFd, std::string &message);
 
-    std::string WriteFile(std::string content);
+    void ReceiveFile(int connectFd, std::string data);
+
+    void WriteFile(std::string content);
 
     bool SendFile(int connectId, std::string fileName);
 
@@ -31,7 +33,7 @@ public:
     void SetClientAllowedToSendFiles(bool clientAllowedToSendFiles);
 
 private:
-    // Data of the server
+    // File descriptor of the server
     int socketFd;
 
     sockaddr_in sa{};

@@ -75,7 +75,7 @@ bool Server::Listen() {
     if (listen(socketFd, 10) < 0) {
         perror("listen failed");
         CloseServerSocket();
-        exit(EXIT_FAILURE);
+        return false;
     } else {
         return true;
     }
@@ -136,7 +136,7 @@ bool Server::SendFile(int connectFd, std::string fileName) {
     }
 }
 
-void Server::Receive(int connectFd, std::string &message) {
+std::string Server::Receive(int connectFd, std::string &message) {
 
     const int BufferSize = DataBufferSize;
     char buffer[BufferSize];
@@ -147,8 +147,27 @@ void Server::Receive(int connectFd, std::string &message) {
         buffer[nrBytes] = '\0';
 
         message = buffer;
+        return message;
     } else {
         message = "Failed reading, data is empty";
+        return "";
+    }
+}
+
+void Server::ReceiveFile(int connectFd, std::string data) {
+    std::string content;
+    content = Receive(connectFd, data);
+
+    if (!content.empty()) {
+        WriteFile(content);
+
+        while (!content.empty()) {
+            content = Receive(connectFd, data);
+            WriteFile(content);
+
+        }
+    } else {
+        std::cout << "The content is empty" << std::endl;
     }
 }
 
@@ -161,19 +180,16 @@ void Server::SetClientAllowedToSendFiles(bool clientAllowedToSendFiles) {
 }
 
 
-std::string Server::WriteFile(std::string content) {
+void Server::WriteFile(std::string content) {
     // Setup the name of the file
-    fileNameId++;
-    std::string fileName = "file";
-    fileName += std::to_string(fileNameId);
+    std::string fileName = "file.txt";
 
     // Write to file
-    std::ofstream outfile(fileName);
+    std::ofstream outfile(fileName, std::ios::app);
 
     outfile << content << std::endl;
 
     outfile.close();
-    return fileName;
 }
 
 bool Server::DeleteFile(std::string fileName) {
@@ -182,6 +198,8 @@ bool Server::DeleteFile(std::string fileName) {
 
     return remove(convertedFileName) == 0;
 }
+
+
 
 
 
