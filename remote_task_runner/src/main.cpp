@@ -21,28 +21,21 @@ int main() {
         // Receive new data
         server.Receive(connectFd, data);
 
-        // When #file# keyword is received, a second piece of data is expected containing the file content
-        if (data == "#file#") {
+        // When #passphrase# keyword is received, a second piece of data is expected containing the pass phrase
+        if (data == "#passphrase#") {
+            server.Receive(connectFd, data);
+            std::cout << "Passphrase received!" << std::endl;
+            if (server.VerifyPassphrase(data)) {
 
-//            if (server.IsClientAllowedToSendFiles()) {
-//
-//                // Calling receive for the second time to receive the file
-//                server.Receive(connectFd, data);
-//
-//                // Write the content of the file to the file system
-//                std::string fileName = server.WriteFile(data);
-//
-//                std::cout << "Wrote file with name: " << fileName << std::endl;
-//
-//                // Send a confirmation to the client and a the file name
-//                server.Send(connectFd,
-//                            "Your file was saved on the server. To request or delete your file use this id: " +
-//                            fileName);
-//            } else {
-//                server.Send(connectFd, "Sorry, you are not allowed to send files");
-//
-//                std::cout << "Client tried to send a file but he was not allowed" << std::endl;
-//            }
+                server.Send(connectFd, "successful");
+                std::cout << "Client authenticated!" << std::endl;
+                server.SetClientAuthenticated(true);
+
+            } else {
+                server.Send(connectFd, "failed, incorrect pass");
+                std::cout << "Client was NOT authenticated!" << std::endl;
+            }
+
 
         } else if (data == "#filerequest#") {
             server.Receive(connectFd, data); // Calling receive for the second time to get the id of the file
@@ -59,9 +52,7 @@ int main() {
         } else if (data == "#filesent#") {
 
 
-                server.ReceiveFile(connectFd, data);
-
-
+            server.ReceiveFile(connectFd, data);
 
 
         } else if (data == "#canIsendafile#") {   // If data is equal to "Can I send a file?"

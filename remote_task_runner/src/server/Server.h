@@ -26,11 +26,15 @@ public:
 
     bool SendFile(int connectId, std::string fileName);
 
-    bool DeleteFile(std::string fileName);
+    bool IsClientAuthenticated() const;
+
+    void SetClientAuthenticated(bool clientAuthenticated);
 
     bool IsClientAllowedToSendFiles() const;
 
     void SetClientAllowedToSendFiles(bool clientAllowedToSendFiles);
+
+    bool VerifyPassphrase(std::string pass);
 
 private:
     // File descriptor of the server
@@ -43,6 +47,8 @@ private:
     socklen_t addr_size;
 
     bool clientAllowedToSendFiles;
+
+    bool clientAuthenticated;
 
     static int fileNameId;
 

@@ -89,15 +89,54 @@ void Client::Receive(std::string &data) {
     }
 }
 
-bool Client::SendFile() {
+bool Client::SendFile(std::string fileName) {
 
-    int fileFd = open("./test_file_1.txt", O_RDONLY);
+//    fileName = "/" + fileName;
+
+    // The open() func requires a char *
+    const char *convertedFileName = fileName.c_str();
+
+    std::cout << convertedFileName << std::endl;
+
+    int fileFd = open(convertedFileName, O_RDONLY);
+
+    std::cout << fileFd << std::endl;
+
     if (fileFd < 0) {
-        std::cout << "File does not exit" << std::endl;
+        std::cout << "File does not exist" << std::endl;
     } else {
-        const int BufferSize = DataBufferSize;
 
-        sendfile(socketFd, fileFd, NULL, (size_t) BufferSize);
+        char buffer[DataBufferSize];
+
+        while (true) {
+
+            // Attempts to read up to count bytes from file descriptor fd
+            // into the buffer starting at buf
+            int bytesRead = read(fileFd, buffer, sizeof(buffer)-1);
+            std::cout << "Buffer filled" << std::endl;
+            if (bytesRead == 0) // We're done reading from the file
+                break;
+
+            if (bytesRead < 0) {
+                std::cout << "An error occurred while reading from file:" << fileName << std::endl;
+            }
+
+            char *positionInBuffer;
+            positionInBuffer = &buffer[0];
+
+            while (bytesRead > 0) {
+
+                // Write to socketFd
+                int bytesWritten = write(socketFd, positionInBuffer, bytesRead);
+
+                if (bytesWritten <= 0) {
+                    std::cout << "Error when writing the file to socket" << std::endl;
+
+                }
+                bytesRead -= bytesWritten;
+                positionInBuffer += bytesWritten;
+            }
+        }
     }
 
     return false;

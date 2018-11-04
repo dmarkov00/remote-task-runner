@@ -5,6 +5,6 @@
 
 const uint16_t PortNumber = 1100;
 
-const int DataBufferSize = 3000;
+const int DataBufferSize = 256;
 
 #endif

@@ -13,7 +13,7 @@ public:
 
     bool Send(std::string message);
 
-    bool SendFile();
+    bool SendFile(std::string fileName);
 
     void Receive(std::string &data);
 

@@ -192,11 +192,17 @@ void Server::WriteFile(std::string content) {
     outfile.close();
 }
 
-bool Server::DeleteFile(std::string fileName) {
 
-    const char *convertedFileName = fileName.c_str();
+bool Server::IsClientAuthenticated() const {
+    return clientAuthenticated;
+}
 
-    return remove(convertedFileName) == 0;
+void Server::SetClientAuthenticated(bool clientAuthenticated) {
+    Server::clientAuthenticated = clientAuthenticated;
+}
+
+bool Server::VerifyPassphrase(std::string pass) {
+    return pass == "pass123";
 }
 
 

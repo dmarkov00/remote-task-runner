@@ -64,25 +64,32 @@ int main() {
             }
                 break;
             case '2': {
-                bool messageSent = client.Send("#canIsendafile#");
 
+                std::cout << "Client: please specify the passphrase" << std::endl;
 
-                std::cout << "Waiting for the server to answer.." << std::endl;
+                std::string pass;
+                std::cin >> pass;
+
+                // Tell the server that a pass is going to be sent
+                bool messageSent = client.Send("#passphrase#");
+                if (!messageSent) {
+                    std::cout << "Client: error not the whole message was sent or some other error occurred"
+                              << std::endl;
+                }
+
+                // Send the actual pass
+                messageSent = client.Send(pass);
 
                 if (!messageSent) {
                     std::cout << "Client: error not the whole message was sent or some other error occurred"
                               << std::endl;
-                    break;
                 }
 
+                // Get the result of authentication
                 client.Receive(data);
 
-                // If the received message is equal to 'yes'
-                if (data == "yes") {
-                    std::cout << "Client: the server responded with 'yes', you can send files now" << std::endl;
-                } else {
-                    std::cout << "Client: the server did not allow you to send files" << std::endl;
-                }
+                // Print the received message
+                std::cout<<"Authentication: " << data << std::endl;
             }
                 break;
             case '3': {
@@ -90,7 +97,7 @@ int main() {
                 client.Send("#file#");
 
                 // Send a file with hardcoded file path
-                client.SendFile();
+                client.SendFile("file.txt");
                 std::cout << "File request was made.." << std::endl;
 
                 client.Receive(data);
@@ -124,27 +131,30 @@ int main() {
             }
                 break;
             case '5': {
-                std::cout << "Specify the id of the file to be deleted" << std::endl;
+                std::cout << "Specify the name of the file to be sent" << std::endl;
 
-                std::string fileId;
-                std::cin >> fileId;
+                std::string fileName;
+                std::cin >> fileName;
 
-                // Tell the server that a file is wanted
-                client.Send("#filedelete#");
+                fileName = "file.txt";
+                // Tell the server that a file is about to be sent
+                client.Send("#filesent#");
 
-                // Send a file name
-                client.Send(fileId);
+//                // Send a file name
+//                client.Send(fileName);
+//
+//                std::cout << "The request for deletion was made.." << std::endl;
 
-                std::cout << "The request for deletion was made.." << std::endl;
-
+                client.SendFile(fileName);
                 // Receive response
-                client.Receive(data);
 
-                if (data == "No file with this id") {
-                    std::cout << "The file does not exist on the server" << std::endl;
-                } else {
-                    std::cout << "The requested file was deleted successfully" << std::endl;
-                }
+//                client.Receive(data);
+
+//                if (data == "No file with this id") {
+//                    std::cout << "The file does not exist on the server" << std::endl;
+//                } else {
+//                    std::cout << "The requested file was deleted successfully" << std::endl;
+//                }
             }
                 break;
             case '6':
