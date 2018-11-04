@@ -10,7 +10,7 @@ static void PrintClientInfo() {
     std::cout << ("(2) Authenticate with a passphrase\n");
     std::cout << ("(3) Turn on the lights\n");
     std::cout << ("(4) Turn off the lights\n");
-    std::cout << ("(5) Show an image to the TV\n");
+    std::cout << ("(5) Show a code snippet on to the TV\n");
     std::cout << ("(6) Remove the image from the TV\n");
     std::cout << ("(7) Exit the client program\n");
     std::cout << "\n";
@@ -89,16 +89,15 @@ int main() {
                 client.Receive(data);
 
                 // Print the received message
-                std::cout<<"Authentication: " << data << std::endl;
+                std::cout << "Authentication: " << data << std::endl;
             }
                 break;
             case '3': {
-                // Indicate to the server that a file is going to be sent
-                client.Send("#file#");
+                // Tell the server to turn on the lights
+                client.Send("#lights_on#");
 
-                // Send a file with hardcoded file path
-                client.SendFile("file.txt");
-                std::cout << "File request was made.." << std::endl;
+
+                std::cout << "Turn lights on request was made!" << std::endl;
 
                 client.Receive(data);
 
@@ -106,28 +105,14 @@ int main() {
             }
                 break;
             case '4': {
-                std::cout << "Specify the id of your file" << std::endl;
+                // Tell the server to turn on the lights
+                client.Send("#lights_off#");
 
-                std::string fileId;
-                std::cin >> fileId;
+                std::cout << "Turn lights off request was made!" << std::endl;
 
-                // Tell the server that a file is wanted
-                client.Send("#filerequest#");
-
-                // Send a file name
-                client.Send(fileId);
-
-                std::cout << "The request was made.." << std::endl;
-
-                // Receive response
                 client.Receive(data);
 
-                if (data == "No file with this id") {
-                    std::cout << "The file does not exist on the server" << std::endl;
-                } else {
-                    client.WriteFile(data);
-                    std::cout << "The requested file was received and written on the file system" << std::endl;
-                }
+                std::cout << data << std::endl;
             }
                 break;
             case '5': {
@@ -138,26 +123,28 @@ int main() {
 
                 fileName = "file.txt";
                 // Tell the server that a file is about to be sent
-                client.Send("#filesent#");
-
-//                // Send a file name
-//                client.Send(fileName);
-//
-//                std::cout << "The request for deletion was made.." << std::endl;
+                client.Send("#put_file_on_tv#");
 
                 client.SendFile(fileName);
-                // Receive response
 
-//                client.Receive(data);
+                // Receive server response
+                client.Receive(data);
 
-//                if (data == "No file with this id") {
-//                    std::cout << "The file does not exist on the server" << std::endl;
-//                } else {
-//                    std::cout << "The requested file was deleted successfully" << std::endl;
-//                }
+                std::cout << data << std::endl;
             }
                 break;
-            case '6':
+            case '6': {
+                client.Send("#remove_file_from_tv#");
+
+                std::cout << "Remove file from tv request was made!" << std::endl;
+
+                client.Receive(data);
+
+                std::cout << data << std::endl;
+
+            }
+                break;
+            case '7':
                 quit = true;
                 break;
             default:

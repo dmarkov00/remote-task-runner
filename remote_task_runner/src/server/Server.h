@@ -30,11 +30,9 @@ public:
 
     void SetClientAuthenticated(bool clientAuthenticated);
 
-    bool IsClientAllowedToSendFiles() const;
-
-    void SetClientAllowedToSendFiles(bool clientAllowedToSendFiles);
-
     bool VerifyPassphrase(std::string pass);
+
+    bool DeleteFile();
 
 private:
     // File descriptor of the server
@@ -46,13 +44,11 @@ private:
 
     socklen_t addr_size;
 
-    bool clientAllowedToSendFiles;
-
     bool clientAuthenticated;
 
-    static int fileNameId;
+    const char *DefaultFileName = "file.txt";
 
-
+    const std::string PassPhrase = "pass123";
 private:
 
     bool Socket();

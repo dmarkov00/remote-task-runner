@@ -34,10 +34,6 @@ Server::Server() {
     }
 }
 
-// Used to generate unique file names
-int Server::fileNameId = 0;
-
-
 bool Server::Socket() {
     // Create a socket, IPv4, Stream sockets, TCP
     socketFd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -171,21 +167,10 @@ void Server::ReceiveFile(int connectFd, std::string data) {
     }
 }
 
-bool Server::IsClientAllowedToSendFiles() const {
-    return clientAllowedToSendFiles;
-}
-
-void Server::SetClientAllowedToSendFiles(bool clientAllowedToSendFiles) {
-    Server::clientAllowedToSendFiles = clientAllowedToSendFiles;
-}
-
 
 void Server::WriteFile(std::string content) {
-    // Setup the name of the file
-    std::string fileName = "file.txt";
-
     // Write to file
-    std::ofstream outfile(fileName, std::ios::app);
+    std::ofstream outfile(DefaultFileName, std::ios::app);
 
     outfile << content << std::endl;
 
@@ -202,10 +187,11 @@ void Server::SetClientAuthenticated(bool clientAuthenticated) {
 }
 
 bool Server::VerifyPassphrase(std::string pass) {
-    return pass == "pass123";
+    return pass == PassPhrase;
 }
 
-
-
+bool Server::DeleteFile() {
+    return remove(DefaultFileName) == 0;
+}
 
 

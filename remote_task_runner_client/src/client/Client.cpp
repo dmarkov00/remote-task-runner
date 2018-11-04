@@ -130,7 +130,7 @@ bool Client::SendFile(std::string fileName) {
                 int bytesWritten = write(socketFd, positionInBuffer, bytesRead);
 
                 if (bytesWritten <= 0) {
-                    std::cout << "Error when writing the file to socket" << std::endl;
+                    std::cout << "Error when writing the file to a socket" << std::endl;
 
                 }
                 bytesRead -= bytesWritten;
