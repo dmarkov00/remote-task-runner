@@ -142,13 +142,3 @@ bool Client::SendFile(std::string fileName) {
     return false;
 }
 
-void Client::WriteFile(std::string content) {
-
-    // Write to file
-    std::ofstream outfile("received_file");
-
-    outfile << content << std::endl;
-
-    outfile.close();
-}
-

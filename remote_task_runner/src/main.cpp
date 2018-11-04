@@ -86,6 +86,7 @@ int main() {
         bool closed = server.CloseClientSocket(connectFd);
 
         if (!closed) {
+            std::cout <<"Exiting: error closing client socket"<< std::endl;
             break;
         }
     }

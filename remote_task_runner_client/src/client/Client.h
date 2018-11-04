@@ -17,8 +17,6 @@ public:
 
     void Receive(std::string &data);
 
-    void WriteFile(std::string content);
-
     bool Close();
 
 private:

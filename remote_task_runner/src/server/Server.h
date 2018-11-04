@@ -49,7 +49,6 @@ private:
     const char *DefaultFileName = "file.txt";
 
     const std::string PassPhrase = "pass123";
-private:
 
     bool Socket();
 

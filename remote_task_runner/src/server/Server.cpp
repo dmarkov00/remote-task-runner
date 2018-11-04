@@ -97,10 +97,10 @@ void Server::CloseServerSocket() {
 bool Server::CloseClientSocket(int connectFd) {
 
     if (shutdown(connectFd, SHUT_RDWR) < 0) {
-//        perror("shutdown failed");
+        perror("shutdown failed");
         close(connectFd);
-//        CloseServerSocket();
-//        return false;
+        CloseServerSocket();
+        return false;
     }
     close(connectFd);
     return true;
