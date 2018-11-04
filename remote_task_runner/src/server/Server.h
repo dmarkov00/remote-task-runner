@@ -34,6 +34,8 @@ public:
 
     bool DeleteFile();
 
+    int GetMasterSocket();
+
 private:
     // File descriptor of the server
     int socketFd;

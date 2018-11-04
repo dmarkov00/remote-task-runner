@@ -82,9 +82,8 @@ int Server::Accept() {
     int connectFd = accept(socketFd, (struct sockaddr *) &their_addr, &addr_size);
 
     if (connectFd < 0) {
-        perror("accept failed");
+        perror("Accept failed");
         CloseServerSocket();
-        exit(EXIT_FAILURE);
     }
     return connectFd;
 }
@@ -192,6 +191,10 @@ bool Server::VerifyPassphrase(std::string pass) {
 
 bool Server::DeleteFile() {
     return remove(DefaultFileName) == 0;
+}
+
+int Server::GetMasterSocket() {
+    return socketFd;
 }
 
 
