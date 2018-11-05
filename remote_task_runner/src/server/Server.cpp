@@ -90,18 +90,18 @@ int Server::Accept() {
 
 
 void Server::CloseServerSocket() {
-    close(socketFd);
+
+    if (close(socketFd) < 0) {
+        perror("Error on closing server socket");
+    }
 }
 
 bool Server::CloseClientSocket(int connectFd) {
 
-    if (shutdown(connectFd, SHUT_RDWR) < 0) {
-        perror("shutdown failed");
-        close(connectFd);
-//        CloseServerSocket();
+    if (close(connectFd) < 0) {
+        perror("Error on closing client socket");
         return false;
     }
-    close(connectFd);
     return true;
 }
 
