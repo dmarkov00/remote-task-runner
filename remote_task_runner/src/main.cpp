@@ -2,17 +2,19 @@
 #include <iostream>
 #include <cstring>
 
+
+void RefreshFileDescriptorList(fd_set readfds, int masterSocket, int maxsd, int &sd, int maxClients,
+                               int clientSockets[]);
+
+
 int main() {
     // Init server
     Server server;
-
-//    int connectFd;
 
     // It is going to be updated when a data is received
     std::string data;
 
     std::cout << "Server: Waiting for messages..." << std::endl;
-    /////////////////////////////////////////////the new setup///////////////////////////
 
     //set of socket descriptors
     int maxClients = 30;
@@ -31,29 +33,8 @@ int main() {
 
     while (true) {
 
-        // Clear the socket set
-        FD_ZERO(&readfds);
+        RefreshFileDescriptorList(readfds, masterSocket, maxsd, sd, maxClients, clientSockets);
 
-        // Add master socket to set
-        FD_SET(masterSocket, &readfds);
-        maxsd = masterSocket;
-
-
-        // Add child sockets to set
-        for (int i = 0; i < maxClients; i++) {
-            // Socket descriptor
-            sd = clientSockets[i];
-
-            //if valid socket descriptor then add to read list
-            if (sd > 0) {
-                FD_SET(sd, &readfds);
-            }
-
-            // Highest file descriptor number, its needed for the select() function
-            if (sd > maxsd) {
-                maxsd = sd;
-            }
-        }
 
         std::cout << "Server: Waiting for messages ON SELECT" << std::endl;
 
@@ -90,8 +71,6 @@ int main() {
                     }
                 }
             }
-
-
 
 
         }
@@ -189,4 +168,31 @@ int main() {
 //        }
     }
     return 0;
+}
+
+void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int &maxClients,
+                               int clientSockets[]) {
+    // Clear the socket set
+    FD_ZERO(&readfds);
+
+    // Add master socket to set
+    FD_SET(masterSocket, &readfds);
+    maxsd = masterSocket;
+
+
+    // Add child sockets to set
+    for (int i = 0; i < maxClients; i++) {
+        // Socket descriptor
+        sd = clientSockets[i];
+
+        // If it is a  valid socket descriptor then add to read list
+        if (sd > 0) {
+            FD_SET(sd, &readfds);
+        }
+
+        // Highest file descriptor number, its needed for the select() function
+        if (sd > maxsd) {
+            maxsd = sd;
+        }
+    }
 }

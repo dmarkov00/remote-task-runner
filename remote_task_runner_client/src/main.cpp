@@ -44,7 +44,6 @@ int main() {
         // Get input
         char menuChoice;
         std::cin >> menuChoice;
-
         switch (menuChoice) {
 
             case '1': {
@@ -157,6 +156,7 @@ int main() {
 
 
     }
+    std::cin.ignore();
     bool closed = client.Close();
     if (!closed) {
         std::cout << "Client: error on closing" << std::endl;
