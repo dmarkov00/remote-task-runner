@@ -108,28 +108,11 @@ bool Server::CloseClientSocket(int connectFd) {
 bool Server::Send(int connectFd, std::string message) {
     // Send message
     size_t nrBytes = send(connectFd, message.c_str(), message.length(), 0);
+    perror("Error on sending");
 
     return nrBytes == message.length();
 }
 
-bool Server::SendFile(int connectFd, std::string fileName) {
-    fileName = "./" + fileName;
-
-    // The open() func requires a char *
-    const char *convertedFileName = fileName.c_str();
-
-    int fileFd = open(convertedFileName, O_RDONLY);
-
-    if (fileFd < 0) {
-        std::cout << "File does not exit" << std::endl;
-        return false;
-    } else {
-        const int BufferSize = DataBufferSize;
-
-        sendfile(connectFd, fileFd, NULL, (size_t) BufferSize);
-        return true;
-    }
-}
 
 std::string Server::Receive(int connectFd, std::string &message) {
 

@@ -24,8 +24,6 @@ public:
 
     void WriteFile(std::string content);
 
-    bool SendFile(int connectId, std::string fileName);
-
     bool IsClientAuthenticated() const;
 
     void SetClientAuthenticated(bool clientAuthenticated);

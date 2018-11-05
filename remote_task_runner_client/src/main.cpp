@@ -34,7 +34,8 @@ int main() {
     if (!connected) {
         std::cout << "Client: error when trying to connect to server" << std::endl;
     }
-
+    client.Receive(data);
+    std::cout << data << std::endl;
 
     while (!quit) {
 
@@ -150,7 +151,7 @@ int main() {
                 quit = true;
                 break;
             default:
-                std::cout << "Client: your choice -> "<<menuChoice<< " was incorrect" << std::endl;
+                std::cout << "Client: your choice -> " << menuChoice << " was incorrect" << std::endl;
                 break;
         }
 

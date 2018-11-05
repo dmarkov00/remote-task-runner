@@ -3,10 +3,12 @@
 #include <cstring>
 
 
-void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int &maxClients,
-                               int clientSockets[]);
+void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int clientSockets[]);
+
 
 void ExecuteOperation(Server &server, int connectFd);
+
+const int MaxClients = 30;
 
 int main() {
     // Init server
@@ -18,25 +20,22 @@ int main() {
     std::cout << "Server: Waiting for messages..." << std::endl;
 
     //set of socket descriptors
-    int maxClients = 30;
 
-    int clientSockets[maxClients];
+    int clientSockets[MaxClients];
     fd_set readfds;
     int masterSocket = server.GetMasterSocket();
     int maxsd, sd, activity, newSocket;
 
 
     // Initialise all sockets to 0
-    for (int i = 0; i < maxClients; i++) {
+    for (int i = 0; i < MaxClients; i++) {
         clientSockets[i] = 0;
     }
 
 
     while (true) {
-
-
-        // Update file descriptors data
-        RefreshFileDescriptorList(readfds, masterSocket, maxsd, sd, maxClients, clientSockets);
+        // Reset data
+        RefreshFileDescriptorList(readfds, masterSocket, maxsd, sd, clientSockets);
 
         // Wait for an activity on one of the sockets
         activity = select(maxsd + 1, &readfds, NULL, NULL, NULL);
@@ -45,7 +44,7 @@ int main() {
             std::cout << "Select method error" << std::endl;
         }
 
-        // If something happened on the master socket , then its an incoming connection
+        // If something happened on the master socket (socket can be read() without blocking), then its an incoming connection
         if (FD_ISSET(masterSocket, &readfds)) {
             if ((newSocket = server.Accept()) < 0) {
                 break;
@@ -56,7 +55,7 @@ int main() {
                 server.Send(newSocket, "You got connected to the server..");
 
                 // Add a new socket to array of sockets
-                for (int i = 0; i < maxClients; i++) {
+                for (int i = 0; i < MaxClients; i++) {
                     // If the position is empty
                     if (clientSockets[i] == 0) {
                         clientSockets[i] = newSocket;
@@ -66,11 +65,11 @@ int main() {
             }
         } else {
             // Operation on a client socket
-            for (int i = 0; i < maxClients; i++) {
+            for (int i = 0; i < MaxClients; i++) {
 
                 sd = clientSockets[i];
 
-                // If something happened on one of the client sockets
+                // If something happened on one of the client sockets -(the socket can be read() without blocking)
                 if (FD_ISSET(sd, &readfds)) {
                     ExecuteOperation(server, sd);
                 }
@@ -81,9 +80,11 @@ int main() {
     return 0;
 }
 
+/**
+    The fd_set need to be reset before every select() call (this is how it works)
+ */
+void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int clientSockets[]) {
 
-void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int &maxClients,
-                               int clientSockets[]) {
     // Clear the socket set
     FD_ZERO(&readfds);
 
@@ -93,7 +94,7 @@ void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, i
 
 
     // Add child sockets to set
-    for (int i = 0; i < maxClients; i++) {
+    for (int i = 0; i < MaxClients; i++) {
         // Socket descriptor
         sd = clientSockets[i];
 
@@ -102,7 +103,7 @@ void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, i
             FD_SET(sd, &readfds);
         }
 
-        // Highest file descriptor number, its needed for the select() function
+        // Get the highest file descriptor number, select() function needs number higher than the max sd as specified in the man page
         if (sd > maxsd) {
             maxsd = sd;
         }
@@ -163,6 +164,9 @@ void ExecuteOperation(Server &server, int connectFd) {
 
     } else {   // Print received messages
 
+        if (data.empty()){
+            std::cout << "Got empty data, maybe someone disconnected " << data << std::endl;
+        }
         std::cout << "Received data: " << data << std::endl;
 
         // Send a message back
