@@ -20,7 +20,7 @@ int main() {
     int clientSockets[maxClients];
     fd_set readfds;
     int masterSocket = server.GetMasterSocket();
-    int maxsd, sd, activity, newSocket; // Socket descriptor
+    int maxsd, sd, activity, newSocket;
 
 
     // Initialise all sockets to 0
@@ -30,7 +30,6 @@ int main() {
 
 
     while (true) {
-        std::cout << "Server: 1" << std::endl;
 
         // Clear the socket set
         FD_ZERO(&readfds);
@@ -38,8 +37,6 @@ int main() {
         // Add master socket to set
         FD_SET(masterSocket, &readfds);
         maxsd = masterSocket;
-        std::cout << "Server: 2" << std::endl;
-        std::cout << "Master socket 1" << masterSocket<< std::endl;
 
 
         // Add child sockets to set
@@ -57,56 +54,64 @@ int main() {
                 maxsd = sd;
             }
         }
-        std::cout << "Server: 3" << std::endl;
+
+        std::cout << "Server: Waiting for messages ON SELECT" << std::endl;
 
         // Wait for an activity on one of the sockets , timeout is NULL , so wait indefinitely
         activity = select(maxsd + 1, &readfds, NULL, NULL, NULL);
         if (activity < 0) {
             std::cout << "Select method error" << std::endl;
         }
-        std::cout << "Server: 4" << std::endl;
 
         //If something happened on the master socket , then its an incoming connection
         if (FD_ISSET(masterSocket, &readfds)) {
             if ((newSocket = server.Accept()) < 0) {
-                std::cout << "Server: 5" << std::endl;
+                std::cout << "NEW CONNECTION" << std::endl;
+
+                //send new connection greeting message
+                server.Send(newSocket, "Yo got connected");
+
 
                 perror("accept");
                 break;
-            }
-
-            std::cout << "NEW CONNECTION" << std::endl;
-
-            //send new connection greeting message
-            server.Send(newSocket, "This thing worked, I think!");
+            } else {
+                std::cout << "NEW CONNECTION was made" << std::endl;
 
 
+                //add new socket to array of sockets
+                for (int i = 0; i < maxClients; i++) {
+                    //if position is empty
+                    if (clientSockets[i] == 0) {
+                        clientSockets[i] = newSocket;
 
-            //add new socket to array of sockets
-            for (int i = 0; i < maxClients; i++) {
-                //if position is empty
-                if (clientSockets[i] == 0) {
-                    clientSockets[i] = newSocket;
-                    printf("Adding to list of sockets as %d\n", i);
+                        std::cout << "ADDED TO the list of client sockets" << std::endl;
 
-                    break;
+                        break;
+                    }
                 }
             }
-            std::cout << "Server: 6" << std::endl;
+
+
+
 
         }
 
         // Else its some IO operation on some other socket
         for (int i = 0; i < maxClients; i++) {
+
             sd = clientSockets[i];
 
             if (FD_ISSET(sd, &readfds)) {
                 //Check if it was for closing , and also read the incoming message
                 server.Receive(sd, data);
+                std::cout << "Socket descriptor ------  " << sd << std::endl;
+
+                std::cout << "THE data is  ------  " << data << std::endl;
+
                 if (data == "Failed reading, data is empty") {
 
                     std::cout << "Somebody disconnected" << std::endl;
-                    server.CloseClientSocket(sd);
+//                    server.CloseClientSocket(sd);
                     clientSockets[i] = 0;
 
                 } else {

@@ -14,8 +14,7 @@ static void PrintClientInfo() {
     std::cout << ("(6) Remove the image from the TV\n");
     std::cout << ("(7) Exit the client program\n");
     std::cout << "\n";
-    std::cout << ("Waiting for a choice..");
-    std::cout << "\n";
+
 
 }
 
@@ -30,17 +29,21 @@ int main() {
     // Print menu
     PrintClientInfo();
 
+    // Establish connection
+    bool connected = client.Connect();
+    if (!connected) {
+        std::cout << "Client: error when trying to connect to server" << std::endl;
+    }
+
+
     while (!quit) {
+
+        std::cout << ("Waiting for a new choice..");
+        std::cout << "\n";
 
         // Get input
         char menuChoice;
         std::cin >> menuChoice;
-
-        // Establish connection
-        bool connected = client.Connect();
-        if (!connected) {
-            std::cout << "Client: error when trying to connect to server" << std::endl;
-        }
 
         switch (menuChoice) {
 
@@ -148,17 +151,15 @@ int main() {
                 quit = true;
                 break;
             default:
-                std::cout << "Client: your choice was incorrect" << std::endl;
+                std::cout << "Client: your choice -> "<<menuChoice<< " was incorrect" << std::endl;
                 break;
         }
 
-        bool closed = client.Close();
-        if (!closed) {
-            std::cout << "Client: error on closing" << std::endl;
-        }
-        // Need to reinitialize the object, since once socket is closed it cannot be reused?
-        client = Client();
-    }
 
+    }
+    bool closed = client.Close();
+    if (!closed) {
+        std::cout << "Client: error on closing" << std::endl;
+    }
     return 0;
 }
