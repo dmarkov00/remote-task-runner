@@ -1,6 +1,6 @@
 PRODUCT=TaskRunner
 
-CPPFLAGS=-I../common
+CPPFLAGS=-I../common -Itasks/task_runner/interfaces
 CXXFLAGS=-Wall  -Wextra -pedantic -ggdb -O0 $(CPPFLAGS)
 CXX=g++
 

@@ -108,7 +108,6 @@ bool Server::CloseClientSocket(int connectFd) {
 bool Server::Send(int connectFd, std::string message) {
     // Send message
     size_t nrBytes = send(connectFd, message.c_str(), message.length(), 0);
-    perror("Error on sending");
 
     return nrBytes == message.length();
 }
@@ -160,18 +159,6 @@ void Server::WriteFile(std::string content) {
 }
 
 
-bool Server::IsClientAuthenticated() const {
-    return clientAuthenticated;
-}
-
-void Server::SetClientAuthenticated(bool clientAuthenticated) {
-    Server::clientAuthenticated = clientAuthenticated;
-}
-
-bool Server::VerifyPassphrase(std::string pass) {
-    return pass == PassPhrase;
-}
-
 bool Server::DeleteFile() {
     return remove(DefaultFileName) == 0;
 }
@@ -180,4 +167,14 @@ int Server::GetMasterSocket() {
     return socketFd;
 }
 
-
+//bool Server::IsClientAuthenticated() const {
+//    return clientAuthenticated;
+//}
+//
+//void Server::SetClientAuthenticated(bool clientAuthenticated) {
+//    Server::clientAuthenticated = clientAuthenticated;
+//}
+//
+//bool Server::VerifyPassphrase(std::string pass) {
+//    return pass == PassPhrase;
+//}

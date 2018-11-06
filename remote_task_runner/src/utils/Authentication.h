@@ -1,9 +1,5 @@
-//
-// Created by mi on 10/31/18.
-//
-
-#ifndef REMOTE_TASK_RUNNER_AUTHENTICATION_H
-#define REMOTE_TASK_RUNNER_AUTHENTICATION_H
+#ifndef UTHENTICATION_H
+#define AUTHENTICATION_H
 
 
 class Authentication {
@@ -11,4 +7,4 @@ class Authentication {
 };
 
 
-#endif //REMOTE_TASK_RUNNER_AUTHENTICATION_H
+#endif

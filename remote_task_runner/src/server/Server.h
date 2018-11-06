@@ -24,15 +24,17 @@ public:
 
     void WriteFile(std::string content);
 
-    bool IsClientAuthenticated() const;
-
-    void SetClientAuthenticated(bool clientAuthenticated);
-
-    bool VerifyPassphrase(std::string pass);
-
     bool DeleteFile();
 
     int GetMasterSocket();
+
+
+//    bool IsClientAuthenticated() const;
+//
+//    void SetClientAuthenticated(bool clientAuthenticated);
+//
+//    bool VerifyPassphrase(std::string pass);
+
 
 private:
     // File descriptor of the server
@@ -44,11 +46,10 @@ private:
 
     socklen_t addr_size;
 
-    bool clientAuthenticated;
+//    bool clientAuthenticated;
+//    const std::string PassPhrase = "pass123";
 
     const char *DefaultFileName = "file.txt";
-
-    const std::string PassPhrase = "pass123";
 
     bool Socket();
 

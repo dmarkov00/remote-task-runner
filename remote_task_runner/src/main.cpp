@@ -5,7 +5,6 @@
 
 void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int clientSockets[]);
 
-
 void ExecuteOperation(Server &server, int connectFd);
 
 const int MaxClients = 30;
@@ -117,21 +116,22 @@ void ExecuteOperation(Server &server, int connectFd) {
     server.Receive(connectFd, data);
 
 //     When #passphrase# keyword is received, a second piece of data is expected containing the pass phrase
-    if (data == "#passphrase#") {
-        server.Receive(connectFd, data);
-        std::cout << "Passphrase received!" << std::endl;
-        if (server.VerifyPassphrase(data)) {
-
-            server.Send(connectFd, "successful");
-            std::cout << "Client authenticated!" << std::endl;
-            server.SetClientAuthenticated(true);
-
-        } else {
-            server.Send(connectFd, "failed, incorrect pass");
-            std::cout << "Client was NOT authenticated!" << std::endl;
-        }
-
-    } else if (data == "#lights_on#") {
+//    if (data == "#passphrase#") {
+//        server.Receive(connectFd, data);
+//        std::cout << "Passphrase received!" << std::endl;
+//        if (server.VerifyPassphrase(data)) {
+//
+//            server.Send(connectFd, "successful");
+//            std::cout << "Client authenticated!" << std::endl;
+//            server.SetClientAuthenticated(true);
+//
+//        } else {
+//            server.Send(connectFd, "failed, incorrect pass");
+//            std::cout << "Client was NOT authenticated!" << std::endl;
+//        }
+//
+//    } else
+    if (data == "#lights_on#") {
 
         std::cout << "Request for turning on the lights was made" << std::endl;
 
@@ -164,7 +164,7 @@ void ExecuteOperation(Server &server, int connectFd) {
 
     } else {   // Print received messages
 
-        if (data.empty()){
+        if (data.empty()) {
             std::cout << "Got empty data, maybe someone disconnected " << data << std::endl;
         }
         std::cout << "Received data: " << data << std::endl;
