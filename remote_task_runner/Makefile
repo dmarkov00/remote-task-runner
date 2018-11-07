@@ -16,9 +16,10 @@ OBJ_FILES= $(addprefix $(OBJ_DIR),main.o Server.o HomeTasksCoordinator.o HomeLig
 # Testing
 TEST_DIR=test/
 
-TEST_BIN_DIR=$(test)bin/
-TEST_BIN=$(TEST_DIR)test_$(PRODUCT)
+TEST_BIN_DIR=$(TEST_DIR)bin/
+TEST_BIN=$(TEST_BIN_DIR)test_$(PRODUCT)
 
+# Needs to be improved by implementing a recursive wildcard, this works for only for files in /tasks_runner
 TEST_SOURCES= $(filter-out src/main.cpp, $(wildcard src/tasks_runner/*.cpp)) \
 				$(wildcard src/tasks_runner/*.h) \
 				$(wildcard test/*.cpp)
@@ -63,7 +64,7 @@ $(OBJ_DIR)HomeLight.o: $(TASKS_DIR)HomeLight.cpp $(TASKS_DIR)HomeLight.h
 $(OBJ_DIR)TVScreenFileVisualizer.o: $(TASKS_DIR)TVScreenFileVisualizer.cpp $(TASKS_DIR)TVScreenFileVisualizer.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(TEST_BIN): $(TEST_SOURCES) $(TEST_HEADERS) Makefile
+$(TEST_BIN): $(TEST_SOURCES) $(TEST_HEADERS)
 	@$(CXX) $(CXXFLAGS) -Itest $(TEST_SOURCES) -o $@ $(LDFLAGS)
 
 
