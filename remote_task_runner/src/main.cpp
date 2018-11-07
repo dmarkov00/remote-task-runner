@@ -1,15 +1,23 @@
 #include "server/Server.h"
 #include <iostream>
 #include <cstring>
+#include <tasks_runner/HomeTasksCoordinator.h>
+#include <tasks_runner/tasks/HomeLight.h>
+#include <tasks_runner/tasks/TVScreenFileVisualizer.h>
 
 
 void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int clientSockets[]);
 
-void ExecuteOperation(Server &server, int connectFd);
+void ExecuteOperation(Server &server, HomeTasksCoordinator &homeTasksCoordinator, int connectFd);
 
 const int MaxClients = 30;
 
 int main() {
+
+    HomeLight homeLight;
+    TVScreenFileVisualizer fileVisualizer;
+    HomeTasksCoordinator homeTasksCoordinator(homeLight, fileVisualizer);
+
     // Init server
     Server server;
 
@@ -70,7 +78,7 @@ int main() {
 
                 // If something happened on one of the client sockets -(the socket can be read() without blocking)
                 if (FD_ISSET(sd, &readfds)) {
-                    ExecuteOperation(server, sd);
+                    ExecuteOperation(server, homeTasksCoordinator, sd);
                 }
             }
         }
@@ -109,7 +117,7 @@ void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, i
     }
 }
 
-void ExecuteOperation(Server &server, int connectFd) {
+void ExecuteOperation(Server &server, HomeTasksCoordinator &homeTasksCoordinator, int connectFd) {
     std::string data;
 
 //     Receive new data
@@ -135,7 +143,8 @@ void ExecuteOperation(Server &server, int connectFd) {
 
         std::cout << "Request for turning on the lights was made" << std::endl;
 
-        // Call methods
+        // Execute task
+        homeTasksCoordinator.TurnOnHomeLight();
 
         server.Send(connectFd, "Lights turned on");
 
