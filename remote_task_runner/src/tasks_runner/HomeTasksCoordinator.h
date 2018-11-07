@@ -1,8 +1,8 @@
 #ifndef HOMETASKSCOORDINATOR_H
 #define HOMETASKSCOORDINATOR_H
 
-#include <tasks_runner/tasks/interfaces/Light.h>
-#include <tasks_runner/tasks/interfaces/FileVisualizer.h>
+#include "Light.h"
+#include "FileVisualizer.h"
 #include "TasksCoordinator.h"
 
 class HomeTasksCoordinator : public TasksCoordinator {

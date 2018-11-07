@@ -3,8 +3,6 @@
 
 #include <arpa/inet.h>
 #include <string>
-#include <TasksCoordinator.h>
-
 
 class Server {
 

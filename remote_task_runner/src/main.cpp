@@ -1,9 +1,9 @@
 #include "server/Server.h"
 #include <iostream>
 #include <cstring>
-#include <tasks_runner/HomeTasksCoordinator.h>
-#include <tasks_runner/tasks/HomeLight.h>
-#include <tasks_runner/tasks/TVScreenFileVisualizer.h>
+#include "tasks_runner/HomeTasksCoordinator.h"
+#include "tasks_runner/tasks/HomeLight.h"
+#include "tasks_runner/tasks/TVScreenFileVisualizer.h"
 
 
 void RefreshFileDescriptorList(fd_set &readfds, int &masterSocket, int &maxsd, int &sd, int clientSockets[]);
