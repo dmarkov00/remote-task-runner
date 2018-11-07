@@ -5,6 +5,7 @@
 
 class HomeLight : public Light {
 public:
+
     void TurnOn() override;
 
     void TurnOff() override;

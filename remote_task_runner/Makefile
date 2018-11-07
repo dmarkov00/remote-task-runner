@@ -14,8 +14,11 @@ TASKS_DIR=$(TASK_RUNNER_DIR)tasks/
 OBJ_FILES= $(addprefix $(OBJ_DIR),main.o Server.o HomeTasksCoordinator.o HomeLight.o TVScreenFileVisualizer.o)
 
 # Testing
-#TEST=test_$(PRODUCT)
-#
+TEST_DIR=test/
+
+TEST_BIN_DIR=$(test)bin/
+TEST_BIN=$(TEST_DIR)test_$(PRODUCT)
+
 #TEST_SOURCES=$(filter-out product/main.cpp, $(SOURCES)) \
 #			 $(wildcard test/*.cpp)
 #
